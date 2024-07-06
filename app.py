@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_file
+import os
 import pandas as pd
 import numpy as np
 import json
@@ -7,7 +8,7 @@ app = Flask(__name__)
 
 # CSVデータをpandas DataFrameに読み込む関数
 def load_data():
-    df = pd.read_csv('dataset/biota_withValue.csv')
+    df = pd.read_csv('static/dataset/viruses_withValue.csv')
     return df
 
 # 深さ4のサブツリーを取得する関数
@@ -47,6 +48,11 @@ class NpEncoder(json.JSONEncoder):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/get_image', methods=['GET'])
+def get_image():
+    image_path = os.path.join('static', 'images', 'overview_viruses.png')
+    return send_file(image_path, mimetype='image/png')
 
 @app.route('/data', methods=['POST'])
 def get_data():
